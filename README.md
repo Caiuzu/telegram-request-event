@@ -52,6 +52,7 @@ npm install express nodemon node-telegram-bot-api dotenv swagger-ui-express swag
 ```
 
 **Explicação das Dependências:**
+
 - **express**: Framework web para Node.js, usado para criar o servidor e gerenciar rotas.
 - **nodemon**: Ferramenta que reinicia automaticamente o servidor quando mudanças no código são detectadas.
 - **node-telegram-bot-api**: Biblioteca para interagir com a API do Telegram.
@@ -82,31 +83,32 @@ TELEGRAM_BOT_TOKEN=YOUR_TELEGRAM_BOT_TOKEN_HERE
 Crie uma pasta `config` e dentro dela um arquivo `swagger.js` para configurar o Swagger:
 
 **/config/swagger.js**
+
 ```js
-const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 
 const options = {
   definition: {
-    openapi: '3.0.0',
+    openapi: "3.0.0",
     info: {
-      title: 'Telegram Bot API',
-      version: '1.0.0',
-      description: 'API para enviar mensagens através do Telegram Bot',
+      title: "Telegram Bot API",
+      version: "1.0.0",
+      description: "API para enviar mensagens através do Telegram Bot",
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: "http://localhost:3000",
       },
     ],
   },
-  apis: ['./routes/*.js'], // Caminho para os arquivos da API
+  apis: ["./routes/*.js"], // Caminho para os arquivos da API
 };
 
 const specs = swaggerJsDoc(options);
 
 const swaggerDocs = (app) => {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 };
 
 module.exports = swaggerDocs;
@@ -117,15 +119,16 @@ module.exports = swaggerDocs;
 Crie uma pasta `routes` e dentro dela um arquivo `index.js` para definir as rotas da API:
 
 **/routes/index.js**
+
 ```js
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 
 // Carregar variáveis de ambiente do arquivo .env
 dotenv.config();
 
-const bot = require('../telegram/bot')(process.env.TELEGRAM_BOT_TOKEN);
+const bot = require("../telegram/bot")(process.env.TELEGRAM_BOT_TOKEN);
 
 /**
  * @swagger
@@ -165,16 +168,17 @@ const bot = require('../telegram/bot')(process.env.TELEGRAM_BOT_TOKEN);
  *       500:
  *         description: Erro ao enviar mensagem
  */
-router.post('/send-message', (req, res) => {
+router.post("/send-message", (req, res) => {
   const { chatId, message } = req.body;
 
   if (!chatId || !message) {
-    return res.status(400).send('chatId e message são necessários');
+    return res.status(400).send("chatId e message são necessários");
   }
 
-  bot.sendMessage(chatId, message)
+  bot
+    .sendMessage(chatId, message)
     .then(() => {
-      res.status(200).send('Mensagem enviada com sucesso');
+      res.status(200).send("Mensagem enviada com sucesso");
     })
     .catch((error) => {
       res.status(500).send(`Erro ao enviar mensagem: ${error.message}`);
@@ -189,8 +193,9 @@ module.exports = router;
 Crie uma pasta `telegram` e dentro dela um arquivo `bot.js` para definir a lógica do bot:
 
 **/telegram/bot.js**
+
 ```js
-const TelegramBot = require('node-telegram-bot-api');
+const TelegramBot = require("node-telegram-bot-api");
 
 // Inicializa o bot do Telegram
 const initBot = (token) => {
@@ -204,7 +209,7 @@ const initBot = (token) => {
   // Handler para o comando /start
   bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
-    const firstName = msg.chat.first_name || 'usuário';
+    const firstName = msg.chat.first_name || "usuário";
 
     bot.sendMessage(chatId, `Olá, ${firstName}! Seu chat ID é ${chatId}.`);
 
@@ -223,11 +228,12 @@ module.exports = initBot;
 Atualize o arquivo principal `index.js` para configurar o Express, o Swagger e carregar o bot do Telegram:
 
 **index.js**
+
 ```js
-const express = require('express');
-const dotenv = require('dotenv');
-const swaggerDocs = require('./config/swagger');
-const routes = require('./routes');
+const express = require("express");
+const dotenv = require("dotenv");
+const swaggerDocs = require("./config/swagger");
+const routes = require("./routes");
 
 // Carregar variáveis de ambiente do arquivo .env
 dotenv.config();
@@ -242,7 +248,7 @@ app.use(express.json());
 swaggerDocs(app);
 
 // Configurar rotas
-app.use('/', routes);
+app.use("/", routes);
 
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
@@ -255,6 +261,7 @@ app.listen(port, () => {
 
 1. **Instalar Dependências**
    Certifique-se de instalar todas as dependências:
+
    ```sh
    npm install
    ```
