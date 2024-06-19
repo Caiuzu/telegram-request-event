@@ -15,11 +15,13 @@ const options = {
       },
     ],
   },
-  apis: ['./index.js'], // Caminho para os arquivos da API
+  apis: ['./routes/*.js'], // Caminho para os arquivos da API
 };
 
 const specs = swaggerJsDoc(options);
 
-module.exports = (app) => {
+const swaggerDocs = (app) => {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 };
+
+module.exports = swaggerDocs;
