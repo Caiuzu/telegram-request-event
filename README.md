@@ -1,4 +1,4 @@
-# Telegram Bot Project
+# Telegram Request Event Project
 
 Este projeto cria um bot do Telegram usando Node.js, Express, Nodemon, e a biblioteca `node-telegram-bot-api`. Além disso, usa `dotenv` para gerenciar variáveis de ambiente e `swagger-ui-express` para documentar a API.
 
